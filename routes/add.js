@@ -9,8 +9,19 @@ router.get("/", (req, res) => {
   });
 });
 router.post("/", async (req, res) => {
-  const course = new Course(req.body.title, req.body.price, req.body.img);
-  await course.save();
-  res.redirect("/courses");
+  const course = new Course({
+    title: req.body.title,
+    price: req.body.price,
+    img: req.body.img,
+    // mongo gets id of the user in req.user automatically
+    // because of the type written in user model
+    userId: req.user
+  });
+  try {
+    await course.save();
+    res.redirect("/courses");
+  } catch (e) {
+    console.log(e);
+  }
 });
 module.exports = router;
